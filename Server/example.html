@@ -1,0 +1,65 @@
+    <html lang="en">
+    <head>
+    <link rel="stylesheet" media="screen" type="text/css" title="Exemple" href="theme.css"/>
+        <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+        <meta charset="UTF-8" />
+        <title>Geonano V1</title>
+        <style type="text/css">
+            html{height: 100%}
+            body{height: 100%; margin: 0px; padding: 0px}
+            #EmplacementDeMaCarte{height: 100%}
+        </style>
+        <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
+        <script type="text/javascript">
+            function initialisation() {
+                var tableauLieux = [ 
+//here I have a loop in php to get my markers in my database
+
+["Paris",     48.86110, 2.34459],
+["Versailles",     48.78199, 2.11045]
+
+
+                ];
+                var optionsCarte = {
+                    mapTypeId: google.maps.MapTypeId.ROADMAP
+                };
+                var maCarte = new google.maps.Map(document.getElementById("EmplacementDeMaCarte"), optionsCarte);
+                var bounds = new google.maps.LatLngBounds();
+                for (var i = 0; i < tableauLieux.length; i++) {
+                    var Lieu = tableauLieux[i];
+                    var pointLieu = new google.maps.LatLng(Lieu[1], Lieu[2]);
+                    bounds.extend(pointLieu);
+                    var marqueurLieu = new google.maps.Marker({
+                        position: pointLieu,
+                        map: maCarte,
+                        title: Lieu[0],
+                        icon : Lieu[3],
+                        clickable: true
+
+                    });
+                    //création de l'info-bulle
+                    var infoBulle = new google.maps.InfoWindow({
+                    content: Lieu[0]//ici on peut mettre des balises HTML
+                    });
+                google.maps.event.addListener(marqueurLieu, 'click', function() {
+            infowindow.setContent(Lieu[i][0]);
+            infoBulle .open(maCarte,marqueurLieu);
+            }); 
+                }
+
+                maCarte.fitBounds(bounds);
+            }
+
+            google.maps.event.addDomListener(window, 'load', initialisation);
+            setInterval("initialisation()", 5000); 
+        </script>
+    </head>
+
+    <body>
+        <div id="EmplacementDeMaCarte"></div>
+
+
+
+    </body>
+    <META HTTP-EQUIV="Refresh" CONTENT="120; URL=http://localhost/geonano.php">
+</html>
